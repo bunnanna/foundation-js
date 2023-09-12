@@ -25,6 +25,7 @@ const grade = (score) => {
   //   } else {
   //     gradeLetter = "F";
   //   }
+  // console.log(`You got ${gradeLetter}`);
 
   console.log(
     `You got ${
