@@ -27,8 +27,8 @@ const isMember = (mem, arr) => {
 	}
 	return false;
 };
-console.log("3.1", isMember(5, [1, 3, 7, 12])); // false
-console.log("3.2", isMember("john", ["jane", "jim", "john"])); // true
+console.log("3.", isMember(5, [1, 3, 7, 12])); // false
+console.log("3.", isMember("john", ["jane", "jim", "john"])); // true
 console.log("-".repeat(20));
 
 // 4.Write a function unique(arr)
@@ -206,7 +206,7 @@ const mid = (arr) => {
 	// 	newArr.pop();
 	// 	newArr.shift();
 	// }
-	return newArr;
+	// return newArr;
 };
 console.log("14.", mid(["john"]));
 console.log("14.", mid(["foo", "bar", "baz"])); // ["bar"]
