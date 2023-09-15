@@ -440,7 +440,7 @@ const markdownToHTML = (md) => {
 				return `<p>${mds}</p>`;
 			}
 		})
-		.join("\n");
+		.reduce((prev, curr) => prev + curr + "\n", "");
 };
 console.log(
 	markdownToHTML(`
