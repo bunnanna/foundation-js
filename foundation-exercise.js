@@ -148,14 +148,12 @@ const filterGt = (n, arr) => {
 console.log(filterGt(0, [120, 112, 111, 130, 169, 101]));
 console.log(filterGt(112, [120, 112, 111, 130, 169, 101]));
 
-// ! 12.Implement a programmable logic to compute compounded return
+// 12.Implement a programmable logic to compute compounded return
 // Compounded returns are an investment strategy in which the interest income earned from the previous period is also invested into the current period.
 // This is like how we earn interests from savings accounts.
 // The interface (function signature) to this logic should be as simple as compoundedReturn(amount, interest, n) where amount is the amount of fund invested in the 1st period, interest is an interest percentage per period, and n is the number of periods of the investment.
 const compoundedReturn = (amount, interest, n) => {
-	for (let i = 0; i < n; i++) {
-		amount *= 1 + interest / 100;
-	}
+	amount *= (1 + interest / 100) ** n;
 	return amount;
 };
 
@@ -317,3 +315,139 @@ const drawDown = (chart) => {
 		.sort((a, b) => b - a)[0];
 };
 console.log(drawDown([110, 105, 95, 9, 80, 17, 120, 115, 11]));
+
+// 1.Write a function summarize(text, trail, len)
+// summarize(text, trail, len) returns the shortest preview of text.
+// If text fits within len, then summarize returns the whole text.
+// If text is longer than len, then summarize will truncate text and appends trail (e.g.  ... with a whitespace at the front) to the return string.
+// The whole return string must fit into len, i.e. its length must not exceed len.
+// The returned text must contain only whole words (i.e. words are separated by whitespace  ). Partial words are not allowed.
+// If len is smaller than 3, and text does not fit len, summarize returns an empty string "".
+const summarize = (text, trail, len) => {
+	if (text.length <= len) return text;
+	const splittext = text.split(" ");
+	if (len < 3 && splittext[0].length > len) return "";
+	let result = "";
+	const trailWithSpace = " " + trail;
+	for (let i = 0; i < splittext.length; i++) {
+		if (!(splittext[i].length < len - result.length - trailWithSpace.length)) {
+			break;
+		}
+		result += " " + splittext[i];
+	}
+	return result + trailWithSpace;
+};
+const articleFoo = "Good morning ladies and gentlemen";
+
+console.log(summarize(articleFoo, " ...", 2)); // ""
+console.log(summarize(articleFoo, " ...", 10)); // "Good ..."
+console.log(summarize(articleFoo, " ...", 20)); // "Good morning ..."
+console.log(summarize(articleFoo, " ...", 25)); // "Good morning ladies ..."
+
+// 2.Write a function mode(arr)
+// mode(arr) returns the statistical mode from the dataset arr (represented as an array).
+// A dataset's mode is the value which appears most frequently in a dataset. If none is found, or if there are no clear winner, mode(arr) returns null
+// A dataset's mode is the value which appears most frequently in a dataset. If none is found, or if there are no clear winner, mode(arr) returns null
+
+const mode = (arr) => {
+	// const countNum = arr.reduce((prev, curr) => {
+	// 	if (!prev[curr]) prev[curr] = 0;
+	// 	prev[curr] += 1;
+	// 	return prev;
+	// }, {});
+	// const modenum = {};
+	// Object.keys(countNum).forEach((key) => {
+	// 	if (!modenum[countNum[key]]) modenum[countNum[key]] = [];
+	// 	modenum[countNum[key]].push(key);
+	// });
+
+	// const modeidx =
+	// 	modenum[Math.max(...Object.keys(modenum).map((v) => Number(v)))];
+	// return modeidx.length == 1 ? Number(modeidx[0]) : null;
+
+	const countNum = arr.reduce((prev, curr) => {
+		if (!prev.get(curr)) prev.set(curr, 0);
+		prev.set(curr, prev.get(curr) + 1);
+		return prev;
+	}, new Map());
+	const modenum = new Map();
+	countNum.forEach((val, key) => {
+		if (!modenum.get(val)) modenum.set(val, []);
+		modenum.set(val, [...modenum.get(val), key]);
+	});
+	const modeidx = modenum.get(Math.max(...Array.from(modenum.keys())));
+	return modeidx.length == 1 ? Number(modeidx[0]) : null;
+};
+console.log(mode([1, 2, 1, 4, 5, 6, 2, 1]));
+console.log(mode([2, 5, 2, 4, 5]));
+
+// 2.1 Write a function mapMode(arr)
+// mapMode(arr) takes in an array of arrays, and returns an array of numbers whose element at index i maps to the statistical mode of arr[i].
+// You are allowed to use mode(arr) written above.
+const mapMode = (arr) => {
+	return arr.map((ar) => mode(ar));
+};
+console.log(
+	mapMode([
+		[1, 2, 3, 1],
+		[100, 200],
+		[10, 20],
+	])
+);
+
+// 3.Write a function transpose(bits, w, h)
+// transpose(bits, w, h) transposes an array bits into arrays of arrays, based on the value of w, h, and to some extent bits.
+// For example, consider this scenario: we are working on a image processing engine.
+// The image files are represented on disks or in memory as just a long list (array) of bytes, much like any files:
+const transpose = (bits, w, h) => {
+	const img = [];
+	let idx = 0;
+	for (let i = 0; i < h; i++) {
+		img[i] = [];
+		for (let j = 0; j < w; j++) {
+			img[i][j] = bits[idx];
+			idx++;
+		}
+	}
+	return img;
+};
+const imageBytes = [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1];
+console.log(transpose(imageBytes, 8, 2));
+console.log(transpose(imageBytes, 2, 8));
+
+// 4.Write a function transposable(arr, w, h)
+// Related to transpose(arr, w, h) above
+// transposable(arr, w, h) returns a boolean, indicating whether the array arr could be transposed with w and h. It is considered transposable if the resulting 2D array can form a rectangle (all rows have uniform length).
+const transposable = (arr, w, h) => arr.length == w * h;
+const image = [1, 0, 1, 0, 1, 1];
+console.log(transposable(image, 2, 3)); // true
+console.log(transposable(image, 6, 1)); // true
+console.log(transposable(image, 4, 2)); // false
+
+// 5.Write a function markdownToHTML(md)
+// markdownToHTML(md) takes in a Markdown string md and returns a HTML string parsed from md.
+// You can just parse the header tags (<h1>, <h2>, and so on) and the paragraph tag <p> and ignore the rest of Markdown standard.
+// Hint: JavaScript strings have method s.startsWith(p) which returns a boolean indicating whether s is prefixed with p
+const markdownToHTML = (md) => {
+	const mdsplit = md.split("\n").filter((i) => i);
+	return mdsplit
+		.map((mds) => {
+			if (mds.startsWith("# ")) {
+				return `<h1>${mds.replace("# ")}</h1>`;
+			} else if (mds.startsWith("## ")) {
+				return `<h2>${mds.replace("## ")}</h2>`;
+			} else {
+				return `<p>${mds}</p>`;
+			}
+		})
+		.join("\n");
+};
+console.log(
+	markdownToHTML(`
+# This is H1
+
+## This is H2
+
+This is a paragraph
+`)
+);
